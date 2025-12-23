@@ -1,32 +1,28 @@
-{% comment %}
-  Featured Products section
-{% endcomment %}
+{{ 'featured-products.css' | asset_url | stylesheet_tag }}
 
-<featured-products class="featured-products">
-  <div class="page-width">
-    {% if section.settings.title != blank %}
-      <div class="featured-products__header">
-        <h2 class="featured-products__title">
-          {{ section.settings.title }}
-        </h2>
+<section class="featured-products">
+  <div class="featured-products__container page-width">
+
+    {% if section.settings.collection != blank %}
+      <h2 class="featured-products__title">
+        {{ section.settings.title }}
+      </h2>
+
+      <div class="featured-products__grid">
+        {% for product in section.settings.collection.products limit: section.settings.products_limit %}
+          {% render 'featured-products-card', product: product %}
+        {% endfor %}
       </div>
+    {% else %}
+      <p>Please select a collection</p>
     {% endif %}
 
-    <div class="featured-products__grid">
-      {% if section.settings.collection != blank %}
-        {% for product in section.settings.collection.products limit: section.settings.products_limit %}
-          {% render 'featured-product-card', product: product %}
-        {% endfor %}
-      {% else %}
-        <p>Please select a collection in section settings.</p>
-      {% endif %}
-    </div>
   </div>
-</featured-products>
+</section>
 
 {% schema %}
 {
-  "name": "Featured products",
+  "name": "Featured products (Refactor)",
   "settings": [
     {
       "type": "text",
@@ -44,14 +40,14 @@
       "id": "products_limit",
       "label": "Products limit",
       "min": 1,
-      "max": 12,
+      "max": 8,
       "step": 1,
       "default": 4
     }
   ],
   "presets": [
     {
-      "name": "Featured products"
+      "name": "Featured products (Refactor)"
     }
   ]
 }
