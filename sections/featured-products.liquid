@@ -1,0 +1,58 @@
+{% comment %}
+  Featured Products section
+{% endcomment %}
+
+<featured-products class="featured-products">
+  <div class="page-width">
+    {% if section.settings.title != blank %}
+      <div class="featured-products__header">
+        <h2 class="featured-products__title">
+          {{ section.settings.title }}
+        </h2>
+      </div>
+    {% endif %}
+
+    <div class="featured-products__grid">
+      {% if section.settings.collection != blank %}
+        {% for product in section.settings.collection.products limit: section.settings.products_limit %}
+          {% render 'featured-product-card', product: product %}
+        {% endfor %}
+      {% else %}
+        <p>Please select a collection in section settings.</p>
+      {% endif %}
+    </div>
+  </div>
+</featured-products>
+
+{% schema %}
+{
+  "name": "Featured products",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section title",
+      "default": "Featured Products"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    },
+    {
+      "type": "range",
+      "id": "products_limit",
+      "label": "Products limit",
+      "min": 1,
+      "max": 12,
+      "step": 1,
+      "default": 4
+    }
+  ],
+  "presets": [
+    {
+      "name": "Featured products"
+    }
+  ]
+}
+{% endschema %}
