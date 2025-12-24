@@ -1,9 +1,9 @@
 class FeaturedProducts extends HTMLElement {
   connectedCallback() {
-    this.cards = this.querySelectorAll('.featured-products__card');
-    this.buttons = this.querySelectorAll('.featured-products__button');
+    this.sectionId = this.dataset.sectionId;
+    this.sectionUrl = this.dataset.sectionUrl;
 
-    this.hideProductsAlreadyInCart();
+    this.buttons = this.querySelectorAll('.featured-products__button');
 
     this.buttons.forEach((button) => {
       button.addEventListener('click', this.onAddToCartClick);
@@ -16,32 +16,6 @@ class FeaturedProducts extends HTMLElement {
     this.buttons.forEach((button) => {
       button.removeEventListener('click', this.onAddToCartClick);
     });
-  }
-
-  async hideProductsAlreadyInCart() {
-    try {
-      const response = await fetch('/cart.js');
-      const cart = await response.json();
-
-      const variantsInCart = cart.items.map(
-        (item) => String(item.variant_id)
-      );
-
-      this.cards.forEach((card) => {
-        const variantId = card.dataset.variantId;
-
-        if (variantsInCart.includes(variantId)) {
-          card.classList.add('is-in-cart');
-          const button = card.querySelector('.featured-products__button');
-          if (button) {
-            button.disabled = true;
-            button.textContent = 'In cart';
-          }
-        }
-      });
-    } catch (error) {
-      console.error('Failed to check cart', error);
-    }
   }
 
   onAddToCartClick = async (event) => {
@@ -74,13 +48,7 @@ class FeaturedProducts extends HTMLElement {
 
       await response.json();
 
-      // 🔥 ОНОВИТИ СТАН КАРТОЧКИ
-      const card = button.closest('.featured-products__card');
-      if (card) {
-        card.classList.add('is-in-cart');
-        button.textContent = 'In cart';
-      }
-
+      await this.refreshSection();
       this.openCartDrawer();
 
     } catch (error) {
@@ -89,6 +57,24 @@ class FeaturedProducts extends HTMLElement {
       button.disabled = false;
     }
   };
+
+  async refreshSection() {
+    const url = `${this.sectionUrl}?section_id=${this.sectionId}`;
+
+    const response = await fetch(url);
+    const html = await response.text();
+
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, 'text/html');
+
+    const newSection = doc.querySelector(
+      `featured-products[data-section-id="${this.sectionId}"]`
+    );
+
+    if (newSection) {
+      this.replaceWith(newSection);
+    }
+  }
 
   openCartDrawer() {
     document.dispatchEvent(new CustomEvent('cart:refresh'));
