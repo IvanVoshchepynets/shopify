@@ -1,10 +1,7 @@
 {{ 'featured-products.css' | asset_url | stylesheet_tag }}
 {{ 'featured-products.js' | asset_url | script_tag }}
 
-<featured-products
-  class="featured-products"
-  data-section-id="{{ section.id }}"
->
+<featured-products class="featured-products">
   <div class="featured-products__container page-width">
 
     {% if section.settings.collection != blank %}
