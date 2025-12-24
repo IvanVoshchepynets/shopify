@@ -20,6 +20,7 @@
     border-radius: 8px;
     overflow: hidden;
     background-color: #fff;
+    transition: opacity 0.3s ease;
 }
 
 .featured-products__image-wrapper {
@@ -57,16 +58,24 @@
     border: none;
     cursor: pointer;
     opacity: 1;
+    transition: background-color 0.3s ease, opacity 0.3s ease;
 }
 
-/* TABLET */
+.featured-products__card.is-in-cart {
+    opacity: 0.5;
+}
+
+.featured-products__card.is-in-cart .featured-products__button {
+    background-color: #999;
+    cursor: not-allowed;
+}
+
 @media (min-width: 750px) {
     .featured-products__grid {
         grid-template-columns: repeat(2, 1fr);
     }
 }
 
-/* DESKTOP */
 @media (min-width: 990px) {
     .featured-products__grid {
         grid-template-columns: repeat(3, 1fr);
