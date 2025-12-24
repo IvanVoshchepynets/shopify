@@ -1,30 +1,36 @@
-class FeaturedProducts {
-  constructor(section) {
-    this.section = section;
-    this.init();
-  }
+class FeaturedProducts extends HTMLElement {
+  connectedCallback() {
+    console.log('FeaturedProducts connected');
 
-  init() {
-    this.bindUI();
-  }
+    this.buttons = this.querySelectorAll('.featured-products__button');
+    console.log('Buttons found:', this.buttons.length);
 
-  bindUI() {
-    const buttons = this.section.querySelectorAll(
-      '.featured-products__button'
-    );
-
-    buttons.forEach((button) => {
-      button.addEventListener('click', () => {
-        console.log('Add to cart clicked');
-      });
+    this.buttons.forEach((button) => {
+      button.addEventListener('click', this.onAddToCartClick);
     });
+  }
+
+  disconnectedCallback() {
+    if (!this.buttons) return;
+
+    this.buttons.forEach((button) => {
+      button.removeEventListener('click', this.onAddToCartClick);
+    });
+  }
+
+  onAddToCartClick(event) {
+    event.preventDefault();
+    console.log('Add to cart clicked', event.currentTarget);
   }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-  const sections = document.querySelectorAll('.featured-products');
+if (!customElements.get('featured-products')) {
+  customElements.define('featured-products', FeaturedProducts);
+}
 
-  sections.forEach((section) => {
-    new FeaturedProducts(section);
-  });
+document.addEventListener('shopify:section:load', (event) => {
+  const section = event.target.querySelector('featured-products');
+  if (section && section.connectedCallback) {
+    section.connectedCallback();
+  }
 });

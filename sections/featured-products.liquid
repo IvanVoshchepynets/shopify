@@ -1,7 +1,10 @@
 {{ 'featured-products.css' | asset_url | stylesheet_tag }}
 {{ 'featured-products.js' | asset_url | script_tag }}
 
-<section class="featured-products">
+<featured-products
+  class="featured-products"
+  data-section-id="{{ section.id }}"
+>
   <div class="featured-products__container page-width">
 
     {% if section.settings.collection != blank %}
@@ -19,7 +22,7 @@
     {% endif %}
 
   </div>
-</section>
+</featured-products>
 
 {% schema %}
 {
@@ -48,7 +51,7 @@
   ],
   "presets": [
     {
-      "name": "Featured products (Refactor)"
+      "name": "Featured products"
     }
   ]
 }
