@@ -1,0 +1,33 @@
+<div
+  class="featured-products__card"
+  data-variant-id="{{ product.selected_or_first_available_variant.id }}"
+>
+  <a href="{{ product.url }}" class="featured-products__image-wrapper">
+    {% if product.featured_image %}
+      <img
+        src="{{ product.featured_image | image_url: width: 600 }}"
+        alt="{{ product.title }}"
+        loading="lazy"
+        class="featured-products__image"
+      >
+    {% endif %}
+  </a>
+
+  <div class="featured-products__info">
+    <h3 class="featured-products__product-title">
+      {{ product.title }}
+    </h3>
+
+    <p class="featured-products__price">
+      {{ product.price | money }}
+    </p>
+
+    <button
+      type="button"
+      class="featured-products__button"
+      data-variant-id="{{ product.selected_or_first_available_variant.id }}"
+    >
+      Add to cart
+    </button>
+  </div>
+</div>

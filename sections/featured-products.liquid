@@ -1,0 +1,59 @@
+{{ 'featured-products.css' | asset_url | stylesheet_tag }}
+{{ 'featured-products.js' | asset_url | script_tag }}
+
+<featured-products
+  class="featured-products"
+  data-section-id="{{ section.id }}"
+  data-section-url="{{ section.url }}"
+>
+  <div class="featured-products__container page-width">
+
+    {% if section.settings.collection != blank %}
+      <h2 class="featured-products__title">
+        {{ section.settings.title }}
+      </h2>
+
+      <div class="featured-products__grid">
+        {% for product in section.settings.collection.products limit: section.settings.products_limit %}
+          {% render 'featured-product-card', product: product %}
+        {% endfor %}
+      </div>
+    {% else %}
+      <p>Please select a collection</p>
+    {% endif %}
+
+  </div>
+</featured-products>
+
+{% schema %}
+{
+  "name": "Featured products",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section title",
+      "default": "Featured Products"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    },
+    {
+      "type": "range",
+      "id": "products_limit",
+      "label": "Products limit",
+      "min": 1,
+      "max": 8,
+      "step": 1,
+      "default": 4
+    }
+  ],
+  "presets": [
+    {
+      "name": "Featured products"
+    }
+  ]
+}
+{% endschema %}
